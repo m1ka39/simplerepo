@@ -8,13 +8,18 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(
+    app,
+    resources={r"/*": {"origins": "*"}},
+    methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
 # Create Gemini client
 client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
 
-@app.route("/summarize", methods=["POST"])
+@app.route("/summarize", methods=["POST", "OPTIONS"])
 def summarize():
     data = request.get_json()
 
@@ -37,7 +42,11 @@ def summarize():
         return jsonify({
             "error": str(e)
         }), 500
-
+        
+@app.route("/", methods=["GET"])
+def home():
+    return "Backend is alive"
+    
 if __name__ == "__main__": 
     app.run(host="0.0.0.0", port=5000)
 
