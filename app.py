@@ -42,7 +42,7 @@ def summarize():
 )
 
         return jsonify({
-            "summary": response.text
+            "summary": response..choices[0].message.content
         })
 
     except Exception as e:
