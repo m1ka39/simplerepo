@@ -8,12 +8,8 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Create Gemini client
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
 
 @app.route("/summarize", methods=["POST"])
 def summarize():
