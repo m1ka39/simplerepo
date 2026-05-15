@@ -34,10 +34,10 @@ def summarize():
     user_text = data["text"]
 
     try:
-        response = client.chat.completions.create(
-    model="llama3-8b-8192",
+        response = response = client.chat.completions.create(
+    model="llama-3.1-8b-instant",
     messages=[
-        {"role": "user", "content": "Summarize: " + user_text}
+        {"role": "user", "content": f"Summarize this clearly and concisely:\n\n{user_text}"}
     ]
 )
 
