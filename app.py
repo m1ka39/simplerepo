@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from google import genai
+from groq import Groq
+import os
+
+
 from dotenv import load_dotenv
 import os
 
@@ -14,10 +17,10 @@ CORS(
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type"]
 )
-# Create Gemini client
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
+# Create Groq client
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+
 
 @app.route("/summarize", methods=["POST", "OPTIONS"])
 def summarize():
@@ -31,10 +34,12 @@ def summarize():
     user_text = data["text"]
 
     try:
-        response = client.models.generate_content(
-            model="gemini-2.0-flash",
-            contents=f"Summarize this clearly and concisely:\n\n{user_text}"
-        )
+        response = client.chat.completions.create(
+    model="llama3-8b-8192",
+    messages=[
+        {"role": "user", "content": "Summarize: " + user_text}
+    ]
+)
 
         return jsonify({
             "summary": response.text
