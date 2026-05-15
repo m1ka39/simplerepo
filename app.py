@@ -10,9 +10,9 @@ load_dotenv()
 app = Flask(__name__)
 CORS(
     app,
-    resources={r"/*": {"origins": "*"}},
+    origins=["*"],
     methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Content-Type", "Authorization"]
+    allow_headers=["Content-Type"]
 )
 # Create Gemini client
 client = genai.Client(
@@ -21,6 +21,8 @@ client = genai.Client(
 
 @app.route("/summarize", methods=["POST", "OPTIONS"])
 def summarize():
+    if request.method == "OPTIONS":
+        return jsonify({}), 200
     data = request.get_json()
 
     if not data or "text" not in data:
